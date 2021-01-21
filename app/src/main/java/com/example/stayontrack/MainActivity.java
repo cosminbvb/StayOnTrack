@@ -27,7 +27,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     private ItemListAdapter adapter;
     private ItemViewModel mItemViewModel;
@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity{
         recyclerView.setAdapter(adapter);
 
         mItemViewModel = new ViewModelProvider(this).get(ItemViewModel.class);
-
 
         mItemViewModel.getAllItems().observe(this, items ->{
             adapter.submitList(items);
@@ -68,12 +67,9 @@ public class MainActivity extends AppCompatActivity{
         if(requestCode == NEW_ITEM_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
             String title = data.getStringExtra("TitleReply");
             String content = data.getStringExtra("ContentReply");
-            Date date = Calendar.getInstance().getTime();
-            @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy hh:mm");
-            String dateString = dateFormat.format(date);
-            Item item = new Item(title, content, dateString);
+            String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
+            Item item = new Item(title, content, date);
             mItemViewModel.insert(item);
         }
     }
-
 }

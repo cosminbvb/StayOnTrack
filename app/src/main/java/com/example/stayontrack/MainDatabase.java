@@ -34,11 +34,11 @@ public abstract class MainDatabase extends RoomDatabase {
             databaseWriteExecutor.execute(() ->{
                 ItemDao dao = INSTANCE.itemDao();
                 dao.deleteAll();
-
+                /*
                 Item item = new Item("Title 1", "Content 1", "11.01.2021");
                 dao.insertItem(item);
                 item = new Item("Title 2", "Content 2", "11.01.2021");
-                dao.insertItem(item);
+                dao.insertItem(item);*/
             });
         }
     };

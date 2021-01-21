@@ -40,4 +40,8 @@ public class ItemListAdapter extends ListAdapter<Item, ItemViewHolder> {
             return oldItem.getContent().equals(newItem.getDate());
         }
     }
+
+    public interface onItemListener{
+        void onItemClick(int position);
+    }
 }
