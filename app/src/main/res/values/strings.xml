@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">StayOnTrack</string>
+    <string name="add_title">Title</string>
+    <string name="add_content">Content</string>
+</resources>
