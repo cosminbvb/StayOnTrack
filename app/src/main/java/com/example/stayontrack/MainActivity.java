@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements ItemListAdapter.O
             adapter.setItems(items);
         });
 
+        // floating action button onclick => add new item
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,9 +64,10 @@ public class MainActivity extends AppCompatActivity implements ItemListAdapter.O
             }
         });
 
+        // handler for right swipe action => delete item
+        // TODO - left swipe => feature (eg adding to a folder)
         ItemTouchHelper helper = new ItemTouchHelper(
-                new ItemTouchHelper.SimpleCallback(0,
-                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
@@ -87,13 +89,19 @@ public class MainActivity extends AppCompatActivity implements ItemListAdapter.O
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // if the request was adding a new item, then we add it to the db
         if(requestCode == NEW_ITEM_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
             String title = data.getStringExtra("TitleReply");
             String content = data.getStringExtra("ContentReply");
             String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
+            // we don t need an id since its auto generated
             Item item = new Item(title, content, date);
             mItemViewModel.insert(item);
         }
+        // if the request was editing an existing item, then we update the item in the db
+        // because the Item object has an auto generated primary key, inserting a new item takes care
+        // of the primary key. But when updating an item, the whole object is needed, meaning that
+        // we also need to attach its id before calling the edit method.
         if(requestCode == EDIT_ITEM_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
             String title = data.getStringExtra("TitleReply");
             String content = data.getStringExtra("ContentReply");
@@ -106,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements ItemListAdapter.O
 
     @Override
     public void onItemClick(int position) {
-
+        // because we want to update an item, we need to attach its id
         Item toEdit = adapter.getItemAtPosition(position);
         Intent intent = new Intent(MainActivity.this, AddActivity.class);
         intent.putExtra("currentTitle", toEdit.getTitle());

@@ -33,11 +33,18 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         if(mItems != null){
             Item current = mItems.get(position);
-            holder.titleTextView.setText(current.getTitle());
-            holder.contentTextView.setText(current.getContent());
+            String title = current.getTitle();
+            if (title.length()>40){
+                title = title.substring(0,40)+"...";
+            }
+            String content = current.getContent();
+            if (content.length()>200){
+                content = content.substring(0,200)+"...";
+            }
+            holder.titleTextView.setText(title);
+            holder.contentTextView.setText(content);
             holder.dateTextView.setText(current.getDate());
         }
-        //else
     }
 
     void setItems(List<Item> items){
