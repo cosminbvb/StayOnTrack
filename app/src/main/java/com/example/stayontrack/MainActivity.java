@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private ItemViewModel mItemViewModel;
 
     public static final int NEW_ITEM_ACTIVITY_REQUEST_CODE = 1;
+    public static final int EDIT_ITEM_ACTIVITY_REQUEST_CODE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +43,13 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ItemListAdapter(new ItemListAdapter.ItemDiff());
+        adapter = new ItemListAdapter(this);
         recyclerView.setAdapter(adapter);
 
         mItemViewModel = new ViewModelProvider(this).get(ItemViewModel.class);
 
         mItemViewModel.getAllItems().observe(this, items ->{
-            adapter.submitList(items);
+            adapter.setItems(items);
         });
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -70,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
             String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
             Item item = new Item(title, content, date);
             mItemViewModel.insert(item);
+        }
+        if(requestCode == EDIT_ITEM_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
+            //TODO
         }
     }
 }

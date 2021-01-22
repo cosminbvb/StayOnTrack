@@ -12,6 +12,7 @@ deciding whether to fetch data from a network or use results cached
 in a local database.*/
 
 import android.app.Application;
+import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
@@ -37,9 +38,21 @@ public class ItemRepository {
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
     void insert(Item item) {
-        MainDatabase.databaseWriteExecutor.execute(() -> {
-            mItemDao.insertItem(item);
-        });
+        new insertAsyncTask(mItemDao).execute(item);
     }
 
+    private static class insertAsyncTask extends AsyncTask<Item, Void, Void>{
+
+        private ItemDao mAsyncTaskDao;
+
+        insertAsyncTask(ItemDao dao){
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Item... params) {
+            mAsyncTaskDao.insertItem(params[0]);
+            return null;
+        }
+    }
 }
