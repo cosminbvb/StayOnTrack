@@ -25,6 +25,14 @@ public class AddActivity extends AppCompatActivity {
         titleEditText = findViewById(R.id.textFieldTitle);
         contentEditText = findViewById(R.id.textFieldContent);
 
+        String currentTitle = getIntent().getStringExtra("currentTitle");
+        String currentContent = getIntent().getStringExtra("currentContent");
+
+        if(currentTitle != null && currentContent != null){
+            titleEditText.setText(currentTitle);
+            contentEditText.setText(currentContent);
+        }
+
         final Button button = findViewById(R.id.saveButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

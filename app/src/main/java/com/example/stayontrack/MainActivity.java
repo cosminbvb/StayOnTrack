@@ -29,7 +29,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ItemListAdapter.OnItemListener {
 
     private ItemListAdapter adapter;
     private ItemViewModel mItemViewModel;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ItemListAdapter(this);
+        adapter = new ItemListAdapter(this, this);
         recyclerView.setAdapter(adapter);
 
         mItemViewModel = new ViewModelProvider(this).get(ItemViewModel.class);
@@ -95,7 +95,23 @@ public class MainActivity extends AppCompatActivity {
             mItemViewModel.insert(item);
         }
         if(requestCode == EDIT_ITEM_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
-            //TODO
+            String title = data.getStringExtra("TitleReply");
+            String content = data.getStringExtra("ContentReply");
+            String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
+            Item item = new Item(title, content, date);
+            Log.d("edit", title); //aici e bine
+            mItemViewModel.edit(item);
         }
+    }
+
+    @Override
+    public void onItemClick(int position) {
+
+        Item toEdit = adapter.getItemAtPosition(position);
+        Intent intent = new Intent(MainActivity.this, AddActivity.class);
+        intent.putExtra("currentTitle", toEdit.getTitle());
+        intent.putExtra("currentContent", toEdit.getContent());
+        startActivityForResult(intent, EDIT_ITEM_ACTIVITY_REQUEST_CODE);
+
     }
 }
