@@ -50,6 +50,10 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemVi
         return 0;
     }
 
+    public Item getItemAtPosition(int position){
+        return mItems.get(position);
+    }
+
     class ItemViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView titleTextView;

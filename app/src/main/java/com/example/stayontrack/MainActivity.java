@@ -1,10 +1,12 @@
 package com.example.stayontrack;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -60,6 +62,26 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, NEW_ITEM_ACTIVITY_REQUEST_CODE);
             }
         });
+
+        ItemTouchHelper helper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(0,
+                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                Item myItem = adapter.getItemAtPosition(position);
+                Toast.makeText(MainActivity.this, "Deleted ", Toast.LENGTH_LONG).show();
+                mItemViewModel.delete(myItem);
+            }
+        });
+
+        helper.attachToRecyclerView(recyclerView);
+
     }
 
     @Override

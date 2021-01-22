@@ -41,6 +41,10 @@ public class ItemRepository {
         new insertAsyncTask(mItemDao).execute(item);
     }
 
+    void delete(Item item){
+        new deleteAsyncTask(mItemDao).execute(item);
+    }
+
     private static class insertAsyncTask extends AsyncTask<Item, Void, Void>{
 
         private ItemDao mAsyncTaskDao;
@@ -52,6 +56,21 @@ public class ItemRepository {
         @Override
         protected Void doInBackground(final Item... params) {
             mAsyncTaskDao.insertItem(params[0]);
+            return null;
+        }
+    }
+
+    private static class deleteAsyncTask extends AsyncTask<Item, Void, Void>{
+
+        private ItemDao mAsyncTaskDao;
+
+        deleteAsyncTask(ItemDao dao){
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Item... params) {
+            mAsyncTaskDao.deleteItem(params[0]);
             return null;
         }
     }

@@ -2,6 +2,7 @@ package com.example.stayontrack;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
@@ -18,6 +19,9 @@ public interface ItemDao {
 
     @Insert
     public void insertAllItems(List<Item> itemList);
+
+    @Delete
+    void deleteItem(Item item);
 
     @Query("DELETE FROM Item")
     public void deleteAll();
