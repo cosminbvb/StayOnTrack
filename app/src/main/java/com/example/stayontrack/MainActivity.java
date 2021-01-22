@@ -106,8 +106,9 @@ public class MainActivity extends AppCompatActivity implements ItemListAdapter.O
             String title = data.getStringExtra("TitleReply");
             String content = data.getStringExtra("ContentReply");
             String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
+            int id = data.getIntExtra("itemId", -1);
             Item item = new Item(title, content, date);
-            Log.d("edit", title); //aici e bine
+            item.setId(id);
             mItemViewModel.edit(item);
         }
     }
@@ -119,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements ItemListAdapter.O
         Intent intent = new Intent(MainActivity.this, AddActivity.class);
         intent.putExtra("currentTitle", toEdit.getTitle());
         intent.putExtra("currentContent", toEdit.getContent());
+        intent.putExtra("itemId", toEdit.getId());
         startActivityForResult(intent, EDIT_ITEM_ACTIVITY_REQUEST_CODE);
 
     }

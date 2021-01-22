@@ -16,6 +16,7 @@ public class AddActivity extends AppCompatActivity {
 
     private TextInputEditText titleEditText;
     private TextInputEditText contentEditText;
+    private int itemId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,6 +28,7 @@ public class AddActivity extends AppCompatActivity {
 
         String currentTitle = getIntent().getStringExtra("currentTitle");
         String currentContent = getIntent().getStringExtra("currentContent");
+        itemId = getIntent().getIntExtra("itemId", -1);
 
         if(currentTitle != null && currentContent != null){
             titleEditText.setText(currentTitle);
@@ -49,6 +51,7 @@ public class AddActivity extends AppCompatActivity {
                     String content = contentEditText.getText().toString();
                     replyIntent.putExtra("TitleReply", title);
                     replyIntent.putExtra("ContentReply", content);
+                    replyIntent.putExtra("itemId", itemId);
                     setResult(RESULT_OK, replyIntent);
                     finish();
                 }
