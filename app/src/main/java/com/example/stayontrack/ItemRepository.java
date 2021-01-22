@@ -45,7 +45,9 @@ public class ItemRepository {
         new deleteAsyncTask(mItemDao).execute(item);
     }
 
-    void edit(Item item) { new editAsyncTask(mItemDao).execute(item); }
+    void edit(Item item) {
+        new editAsyncTask(mItemDao).execute(item);
+    }
 
     private static class insertAsyncTask extends AsyncTask<Item, Void, Void>{
 
