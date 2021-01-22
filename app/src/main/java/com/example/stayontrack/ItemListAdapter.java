@@ -1,43 +1,92 @@
 package com.example.stayontrack;
 
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 
-public class ItemListAdapter extends ListAdapter<Item, ItemViewHolder> {
+import java.util.List;
 
-    public ItemListAdapter(@NonNull DiffUtil.ItemCallback<Item> diffCallBack){
-        super(diffCallBack);
+public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemViewHolder> {
+
+    private final LayoutInflater mInflater;
+    private List<Item> mItems; //cached copy of items
+    private OnItemListener mOnItemListener;
+
+    ItemListAdapter(Context context, OnItemListener onItemListener){
+        mInflater = LayoutInflater.from(context);
+        mOnItemListener = onItemListener;
     }
 
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return ItemViewHolder.create(parent);
+        View view = mInflater.inflate(R.layout.item_row, parent, false);
+        return new ItemViewHolder(view, mOnItemListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        Item current = getItem(position);
-        holder.bind(current.getTitle(), current.getContent(), current.getDate());
+        if(mItems != null){
+            Item current = mItems.get(position);
+            String title = current.getTitle();
+            if (title.length()>40){
+                title = title.substring(0,40)+"...";
+            }
+            String content = current.getContent();
+            if (content.length()>200){
+                content = content.substring(0,200)+"...";
+            }
+            holder.titleTextView.setText(title);
+            holder.contentTextView.setText(content);
+            holder.dateTextView.setText(current.getDate());
+        }
     }
 
-    static class ItemDiff extends DiffUtil.ItemCallback<Item> {
+    void setItems(List<Item> items){
+        mItems = items;
+        notifyDataSetChanged();
+    }
 
-        @Override
-        public boolean areItemsTheSame(@NonNull Item oldItem, @NonNull Item newItem) {
-            return oldItem == newItem;
+    @Override
+    public int getItemCount() {
+        if(mItems != null)
+            return mItems.size();
+        return 0;
+    }
+
+    public Item getItemAtPosition(int position){
+        return mItems.get(position);
+    }
+
+    class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+        private final TextView titleTextView;
+        private final TextView contentTextView;
+        private final TextView dateTextView;
+
+        OnItemListener onItemListener;
+
+        public ItemViewHolder(@NonNull View itemView, OnItemListener onItemListener) {
+            super(itemView);
+            titleTextView = itemView.findViewById(R.id.titleTextView);
+            contentTextView = itemView.findViewById(R.id.contentTextView);
+            dateTextView = itemView.findViewById(R.id.dateTextView);
+            this.onItemListener = onItemListener;
+            itemView.setOnClickListener(this);
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull Item oldItem, @NonNull Item newItem) {
-            if(!oldItem.getTitle().equals(newItem.getTitle()))
-                return false;
-            if(!oldItem.getContent().equals(newItem.getContent()))
-                return false;
-            return oldItem.getContent().equals(newItem.getDate());
+        public void onClick(View v) {
+            onItemListener.onItemClick(getAdapterPosition());
         }
+    }
+
+    public interface OnItemListener{
+        void onItemClick(int position);
     }
 }

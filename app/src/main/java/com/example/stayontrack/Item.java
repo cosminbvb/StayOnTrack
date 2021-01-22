@@ -1,10 +1,7 @@
 package com.example.stayontrack;
 
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
-import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "Item")
 public class Item {
