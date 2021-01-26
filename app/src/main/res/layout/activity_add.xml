@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:endIconMode="clear_text"
+        app:hintTextColor="@color/labelColor"
         android:hint="@string/add_title">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -28,6 +29,8 @@
         app:endIconMode="clear_text"
         app:boxBackgroundMode="none"
         android:layout_marginTop="10dp"
+        app:hintTextColor="@color/labelColor"
+        app:counterEnabled="true"
         android:hint="@string/add_content">
 
         <!--app:counterEnabled="true"
@@ -40,12 +43,5 @@
             />
 
     </com.google.android.material.textfield.TextInputLayout>
-
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|bottom"
-        android:text="Save"/>
 
 </LinearLayout>

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -35,28 +36,31 @@ public class AddActivity extends AppCompatActivity {
             contentEditText.setText(currentContent);
         }
 
-        final Button button = findViewById(R.id.saveButton);
-        button.setOnClickListener(new View.OnClickListener() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
-            public void onClick(View v) {
+            public void handleOnBackPressed() {
                 if(TextUtils.isEmpty(titleEditText.getText())){
-                    titleEditText.setError("Give it a title");
+                    titleEditText.setText(currentTitle);
                 }
                 else if(TextUtils.isEmpty(contentEditText.getText())){
-                    contentEditText.setError("Empty content");
+                    contentEditText.setText(currentContent);
                 }
-                else{
-                    Intent replyIntent = new Intent();
-                    String title = titleEditText.getText().toString();
-                    String content = contentEditText.getText().toString();
-                    replyIntent.putExtra("TitleReply", title);
-                    replyIntent.putExtra("ContentReply", content);
-                    replyIntent.putExtra("itemId", itemId);
-                    setResult(RESULT_OK, replyIntent);
-                    finish();
-                }
+                Intent replyIntent = new Intent();
+                String title = titleEditText.getText().toString();
+                String content = contentEditText.getText().toString();
 
+                content = content.replaceAll("\\s+$", "");  //trim doar in capatul drept
+                title=title.replaceAll("\\s+$", "");
+
+                replyIntent.putExtra("TitleReply", title);
+                replyIntent.putExtra("ContentReply", content);
+                replyIntent.putExtra("itemId", itemId);
+
+                setResult(RESULT_OK, replyIntent);
+                finish();
             }
-        });
+        };
+        this.getOnBackPressedDispatcher().addCallback(this, callback);
+
     }
 }

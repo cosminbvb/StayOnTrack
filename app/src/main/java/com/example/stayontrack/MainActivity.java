@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.sql.DataSource;
 
@@ -96,7 +97,8 @@ public class MainActivity extends AppCompatActivity implements ItemListAdapter.O
             String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
             // we don t need an id since its auto generated
             Item item = new Item(title, content, date);
-            mItemViewModel.insert(item);
+            if(!title.isEmpty() || !content.isEmpty())
+                mItemViewModel.insert(item);
         }
         // if the request was editing an existing item, then we update the item in the db
         // because the Item object has an auto generated primary key, inserting a new item takes care
