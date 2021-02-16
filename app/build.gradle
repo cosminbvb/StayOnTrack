@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 29
     buildToolsVersion "30.0.0"
@@ -43,9 +43,14 @@ dependencies {
     def room_version = "2.2.6"
 
     implementation "androidx.room:room-runtime:$room_version"
+    implementation 'com.google.firebase:firebase-auth:16.0.5'
+    implementation 'com.firebaseui:firebase-ui-auth:6.4.0'
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
     implementation 'androidx.cardview:cardview:1.0.0'
+
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:26.3.0')
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

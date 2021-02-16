@@ -3,36 +3,30 @@ package com.example.stayontrack;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuView;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.text.DateFormat;
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
-import javax.sql.DataSource;
+public class MainActivity extends AppCompatActivity implements ItemAdapter.OnItemListener {
 
-public class MainActivity extends AppCompatActivity implements ItemListAdapter.OnItemListener {
-
-    private ItemListAdapter adapter;
+    private ItemAdapter adapter;
     private ItemViewModel mItemViewModel;
 
     public static final int NEW_ITEM_ACTIVITY_REQUEST_CODE = 1;
@@ -46,16 +40,27 @@ public class MainActivity extends AppCompatActivity implements ItemListAdapter.O
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ItemListAdapter(this, this);
+
+        adapter = new ItemAdapter(this, this);
         recyclerView.setAdapter(adapter);
+
+        TextView empty = findViewById(R.id.empty_prompt); // textView for the "no notes" message
 
         mItemViewModel = new ViewModelProvider(this).get(ItemViewModel.class);
 
-        mItemViewModel.getAllItems().observe(this, items ->{
-            adapter.setItems(items);
+        mItemViewModel.getAllItems().observe(this, new Observer<List<Item>>() {
+            @Override
+            public void onChanged(List<Item> itemList) {
+                // itemList is the new data
+                if(itemList.size() != 0){
+                    empty.setVisibility(View.GONE);
+                } else {
+                    empty.setVisibility(View.VISIBLE);
+                }
+                adapter.setItems(itemList);
+            }
         });
 
-        // floating action button onclick => add new item
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements ItemListAdapter.O
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
                 Item myItem = adapter.getItemAtPosition(position);
-                Toast.makeText(MainActivity.this, "Deleted ", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Deleted", Toast.LENGTH_LONG).show();
                 mItemViewModel.delete(myItem);
             }
         });
@@ -86,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements ItemListAdapter.O
         helper.attachToRecyclerView(recyclerView);
 
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

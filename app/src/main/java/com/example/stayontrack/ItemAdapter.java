@@ -1,6 +1,7 @@
 package com.example.stayontrack;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemViewHolder> {
+public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
 
     private final LayoutInflater mInflater;
     private List<Item> mItems; //cached copy of items
     private OnItemListener mOnItemListener;
 
-    ItemListAdapter(Context context, OnItemListener onItemListener){
+    ItemAdapter(Context context, OnItemListener onItemListener){
         mInflater = LayoutInflater.from(context);
         mOnItemListener = onItemListener;
     }
