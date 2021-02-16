@@ -3,6 +3,8 @@ package com.example.stayontrack;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Date;
+
 @Entity(tableName = "Item")
 public class Item {
 
@@ -10,9 +12,9 @@ public class Item {
     private int id;
     private String title;
     private String content;
-    private String date;
+    private Date date;
 
-    public Item(String title, String content, String date) {
+    public Item(String title, String content, Date date) {
         this.title = title;
         this.content = content;
         this.date = date;
@@ -42,11 +44,11 @@ public class Item {
         this.content = content;
     }
 
-    public String  getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 }

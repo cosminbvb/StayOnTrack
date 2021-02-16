@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
         if(requestCode == NEW_ITEM_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
             String title = data.getStringExtra("TitleReply");
             String content = data.getStringExtra("ContentReply");
-            String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
+            Date date = new Date();
             // we don t need an id since its auto generated
             Item item = new Item(title, content, date);
             if(!title.isEmpty() || !content.isEmpty())
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
         if(requestCode == EDIT_ITEM_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
             String title = data.getStringExtra("TitleReply");
             String content = data.getStringExtra("ContentReply");
-            String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
+            Date date = new Date();
             int id = data.getIntExtra("itemId", -1);
             Item item = new Item(title, content, date);
             item.setId(id);

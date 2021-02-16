@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
@@ -42,9 +43,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             if (content.length()>200){
                 content = content.substring(0,200)+"...";
             }
+            String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(current.getDate());
             holder.titleTextView.setText(title);
             holder.contentTextView.setText(content);
-            holder.dateTextView.setText(current.getDate());
+            holder.dateTextView.setText(date);
         }
     }
 
