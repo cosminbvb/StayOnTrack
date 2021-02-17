@@ -11,16 +11,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
 
     public static final int NEW_ITEM_ACTIVITY_REQUEST_CODE = 1;
     public static final int EDIT_ITEM_ACTIVITY_REQUEST_CODE = 2;
+
+    private TextInputEditText searchEditText;
+    private TextView empty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
         adapter = new ItemAdapter(this, this);
         recyclerView.setAdapter(adapter);
 
-        TextView empty = findViewById(R.id.empty_prompt); // textView for the "no notes" message
+        empty = findViewById(R.id.empty_prompt); // textView for the "no notes" message
 
         mItemViewModel = new ViewModelProvider(this).get(ItemViewModel.class);
 
@@ -55,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
                 if(itemList.size() != 0){
                     empty.setVisibility(View.GONE);
                 } else {
+                    String msg = "You currently have no notes";
+                    empty.setText(msg);
                     empty.setVisibility(View.VISIBLE);
                 }
                 adapter.setItems(itemList);
@@ -90,6 +100,24 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
 
         helper.attachToRecyclerView(recyclerView);
 
+        searchEditText = findViewById(R.id.searchEditText);
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                search(s.toString().toLowerCase());
+            }
+        });
+
     }
 
 
@@ -119,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
             item.setId(id);
             mItemViewModel.edit(item);
         }
+        searchEditText.setText("");
     }
 
     @Override
@@ -131,5 +160,25 @@ public class MainActivity extends AppCompatActivity implements ItemAdapter.OnIte
         intent.putExtra("itemId", toEdit.getId());
         startActivityForResult(intent, EDIT_ITEM_ACTIVITY_REQUEST_CODE);
 
+    }
+
+    private void search(String query){
+        List<Item> items = mItemViewModel.getAllItems().getValue();
+        List<Item> filtered = new ArrayList<>();
+        if(items != null){
+            for(Item item : items){
+                if(item.getTitle().toLowerCase().contains(query) || item.getContent().toLowerCase().contains(query)){
+                    filtered.add(item);
+                }
+            }
+            if(filtered.size() == 0){
+                empty.setVisibility(View.VISIBLE);
+                String msg = "No results found";
+                empty.setText(msg);
+            } else {
+                empty.setVisibility(View.GONE);
+            }
+            adapter.setItems(filtered);
+        }
     }
 }
